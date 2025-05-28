@@ -26,7 +26,7 @@ async def telegram_id_exists(db: AsyncSession, table_name: str, telegram_id: str
         """)
         result = await db.execute(query, {"telegram_id": telegram_id})
         exists = result.scalar()
-        return not exists  # Invert: if exists -> False, if not -> True
+        return exists  # Invert: if exists -> False, if not -> True
     except SQLAlchemyError as e:
         logger.error(f"Error checking telegram_id in table '{table_name}': {str(e)}")
         return False
