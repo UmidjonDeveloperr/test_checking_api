@@ -12,6 +12,13 @@ class TestCreate(BaseModel):
     answers: str
     created_at: datetime
 
+# Add this to schemas.py
+class TestUpdate(BaseModel):
+    subject1: Optional[str] = None
+    subject2: Optional[str] = None
+    answers: Optional[str] = None
+    status: Optional[str] = None
+
 class DeleteResponse(BaseModel):
     success: bool
     message: str

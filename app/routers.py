@@ -19,6 +19,17 @@ async def create_test(
         raise HTTPException(status_code=400, detail="Test ID already registered")
     return await crud.create_test(db=db, test=test)
 
+# Add this to main.py
+@router.put("/tests/{test_id}", response_model=schemas.TestResponse)
+async def update_test(
+    test_id: str,
+    test_update: schemas.TestUpdate,
+    db: AsyncSession = Depends(database.get_db)
+):
+    db_test = await crud.update_test(db, test_id=test_id, update_data=test_update)
+    if db_test is None:
+        raise HTTPException(status_code=404, detail="Test not found")
+    return db_test
 
 @router.get("/test/{test_id}", response_model=schemas.TestResponse)
 async def read_test(

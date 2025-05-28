@@ -26,7 +26,7 @@ async def telegram_id_exists(db: AsyncSession, table_name: str, telegram_id: str
         """)
         result = await db.execute(query, {"telegram_id": telegram_id})
         exists = result.scalar()
-        return exists  # Invert: if exists -> False, if not -> True
+        return exists
     except SQLAlchemyError as e:
         logger.error(f"Error checking telegram_id in table '{table_name}': {str(e)}")
         return False
@@ -151,6 +151,29 @@ async def create_user_response(db: AsyncSession, response: schemas.UserResponseC
         logger.error(f"Error creating user response: {str(e)}")
         await db.rollback()
         raise
+
+
+# Add this to crud.py
+async def update_test(
+        db: AsyncSession,
+        test_id: str,
+        update_data: schemas.TestUpdate
+):
+    # Get the existing test
+    result = await db.execute(select(models.Test).where(models.Test.test_id == test_id))
+    db_test = result.scalars().first()
+
+    if not db_test:
+        return None
+
+    # Update only the fields that are provided
+    update_data = update_data.model_dump(exclude_unset=True)
+    for field, value in update_data.items():
+        setattr(db_test, field, value)
+
+    await db.commit()
+    await db.refresh(db_test)
+    return db_test
 
 async def get_all_tests(db: AsyncSession, skip: int = 0, limit: int = 100):
     """Barcha testlarni paginatsiya bilan qaytaradi"""
