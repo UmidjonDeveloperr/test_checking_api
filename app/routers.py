@@ -67,6 +67,13 @@ async def create_response(
             detail="Test not found"
         )
 
+    table_name = f"{response.test_id}_answers"
+    telegram_id_exist = await crud.telegram_id_exists(db, table_name, response.telegram_id)
+    if telegram_id_exist:
+        raise HTTPException(
+            status_code=403,
+            detail="Telegram ID already registered"
+        )
     if len(response.answers) != len(test.answers):
         raise HTTPException(
             status_code=400,

@@ -16,6 +16,21 @@ async def get_test(db: AsyncSession, test_id: str):
     result = await db.execute(select(models.Test).where(models.Test.test_id == test_id))
     return result.scalars().first()
 
+async def telegram_id_exists(db: AsyncSession, table_name: str, telegram_id: str) -> bool:
+    """Return False if telegram_id exists in the given table, else True."""
+    try:
+        query = text(f"""
+            SELECT EXISTS (
+                SELECT 1 FROM {table_name} WHERE telegram_id = :telegram_id
+            );
+        """)
+        result = await db.execute(query, {"telegram_id": telegram_id})
+        exists = result.scalar()
+        return not exists  # Invert: if exists -> False, if not -> True
+    except SQLAlchemyError as e:
+        logger.error(f"Error checking telegram_id in table '{table_name}': {str(e)}")
+        return False
+
 
 async def create_test(db: AsyncSession, test: schemas.TestCreate):
     db_test = models.Test(**test.dict())
