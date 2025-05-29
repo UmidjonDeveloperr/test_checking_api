@@ -276,7 +276,7 @@ async def export_test_results_to_excel(db: AsyncSession, test_id: str):
         ws.title = "Test Results"
 
         # Add headers
-        headers = ["No", "F.I.O (Region)", "Ball"]
+        headers = ["No", "F.I.O (Hudud)", "Ball"]
         ws.append(headers)
 
         # Style headers
