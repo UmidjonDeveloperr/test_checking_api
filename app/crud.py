@@ -19,6 +19,9 @@ async def get_test(db: AsyncSession, test_id: str):
 async def telegram_id_exists(db: AsyncSession, table_name: str, telegram_id: str) -> bool:
     """Return False if telegram_id exists in the given table, else True."""
     try:
+        table_name_exist = await table_exists(db, table_name)
+        if not table_name_exist:
+            return True
         query = text(f"""
             SELECT EXISTS (
                 SELECT 1 FROM {table_name} WHERE telegram_id = :telegram_id
