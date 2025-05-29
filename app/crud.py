@@ -21,7 +21,7 @@ async def telegram_id_exists(db: AsyncSession, table_name: str, telegram_id: str
     try:
         table_name_exist = await table_exists(db, table_name)
         if not table_name_exist:
-            return True
+            return False
         query = text(f"""
             SELECT EXISTS (
                 SELECT 1 FROM {table_name} WHERE telegram_id = :telegram_id
