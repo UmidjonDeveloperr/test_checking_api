@@ -85,9 +85,9 @@ async def create_user_response(db: AsyncSession, response: schemas.UserResponseC
         # Calculate score
         score = 0.0
         for i, (user_answer, correct_answer) in enumerate(zip(response.answers, test.answers)):
-            if i < 45:
+            if i < 30:
                 points = 1.1
-            elif i < 75:  # 45 + 30
+            elif i < 60:  # 30 + 30
                 points = 3.1
             else:  # remaining 30
                 points = 2.1
