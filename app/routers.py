@@ -78,7 +78,7 @@ async def create_response(
             detail="Test not found"
         )
 
-    table_name = f"{response.test_id}_answers"
+    table_name = f"user_{response.test_id}_answers"
     telegram_id_exist = await crud.telegram_id_exists(db, table_name, response.telegram_id)
     if telegram_id_exist:
         raise HTTPException(

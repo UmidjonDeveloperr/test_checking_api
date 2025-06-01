@@ -96,7 +96,7 @@ async def create_user_response(db: AsyncSession, response: schemas.UserResponseC
                 score += points
 
         # Table name (sanitized)
-        table_name = f"{response.test_id}_answers"
+        table_name = f"user_{response.test_id}_answers"
 
         # Check if table exists
         exists = await table_exists(db, table_name)
@@ -204,7 +204,7 @@ async def delete_test(db: AsyncSession, test_id: str):
         await db.delete(test)
 
         # 3. Test javoblari jadvalini o'chiramiz
-        table_name = f"{test_id}_responses"
+        table_name = f"user_{test_id}_answers"
         if await table_exists(db, table_name):
             await db.execute(
                 text(f"DROP TABLE {table_name};")
@@ -220,7 +220,7 @@ async def delete_test(db: AsyncSession, test_id: str):
 
 async def get_user_responses(db: AsyncSession, test_id: str, skip: int = 0, limit: int = 100):
     try:
-        table_name = f"{test_id}_answers"
+        table_name = f"user_{test_id}_answers"
 
         # Check if table exists
         exists = await table_exists(db, table_name)
@@ -254,7 +254,7 @@ async def export_test_results_to_excel(db: AsyncSession, test_id: str):
             return None
 
         # Get responses from dynamic table
-        table_name = f"{test_id}_answers"
+        table_name = f"user_{test_id}_answers"
         if not await table_exists(db, table_name):
             return None
 

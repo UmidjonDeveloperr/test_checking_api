@@ -17,7 +17,7 @@ class Test(Base):
 
 # Function to create dynamic tables
 async def create_dynamic_table(test_id: str):
-    table_name = f"{test_id}_answers"
+    table_name = f"user_{test_id}_answers"
     metadata = MetaData()
 
     Table(
